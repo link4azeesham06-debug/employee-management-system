@@ -11,7 +11,8 @@ import {
 } from "react";
 import toast from "react-hot-toast";
 
-import { getUserErrorMessage, logAppError } from "@/lib/errors/normalizeError";
+import { getUserErrorMessage } from "@/lib/errors/normalizeError";
+import { reportError } from "@/lib/errors/reportError";
 import { useAuth } from "@/hooks/useAuth";
 import {
   createNotification,
@@ -41,7 +42,7 @@ type NotificationContextType = {
 const NotificationContext = createContext<NotificationContextType | null>(null);
 
 function showNotificationError(error: unknown): void {
-  logAppError("NotificationContext", error);
+  reportError(error, { scope: "NotificationContext" });
   toast.error(getUserErrorMessage(error, "Unable to update notifications."));
 }
 

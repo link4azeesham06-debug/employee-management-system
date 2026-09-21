@@ -50,6 +50,16 @@ export function usePermissions() {
       "canApproveLeaves"
     ),
 
+    canRequestLeave: hasPermission(
+      role,
+      "canRequestLeave"
+    ),
+
+    canViewLeave: hasPermission(
+      role,
+      "canViewLeave"
+    ),
+
     canManageUsers: hasPermission(
       role,
       "canManageUsers"

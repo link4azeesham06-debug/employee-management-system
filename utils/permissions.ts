@@ -18,6 +18,10 @@ export const permissions = {
 
     canApproveLeaves: true,
 
+    canRequestLeave: false,
+
+    canViewLeave: true,
+
     canManageUsers: true,
 
   },
@@ -35,6 +39,10 @@ export const permissions = {
     canManageDepartments: false,
 
     canApproveLeaves: false,
+
+    canRequestLeave: true,
+
+    canViewLeave: true,
 
     canManageUsers: false,
 

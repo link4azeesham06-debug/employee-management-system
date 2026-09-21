@@ -13,7 +13,8 @@ import {
 import { Department } from "@/types/department";
 import type { DepartmentCreateInput } from "@/lib/validation/department";
 import { AppError } from "@/lib/errors/AppError";
-import { logAppError, normalizeError } from "@/lib/errors/normalizeError";
+import { normalizeError } from "@/lib/errors/normalizeError";
+import { reportError } from "@/lib/errors/reportError";
 
 import {
   addDepartment,
@@ -83,7 +84,7 @@ export function DepartmentProvider({
     try {
       await addLog(input);
     } catch (error) {
-      logAppError("DepartmentContext.audit", error);
+      reportError(error, { scope: "DepartmentContext.audit" });
     }
   }
 
@@ -123,7 +124,7 @@ export function DepartmentProvider({
         fallbackCode: "DATABASE",
         fallbackMessage: "Unable to load departments.",
       });
-      logAppError("DepartmentContext.refreshDepartments", normalized);
+      reportError(normalized, { scope: "DepartmentContext.refreshDepartments" });
       throw normalized;
     } finally {
       setLoading(false);

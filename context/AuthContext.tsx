@@ -9,6 +9,7 @@ import {
 } from "react";
 
 import { supabase } from "@/lib/supabase/client";
+import { reportError } from "@/lib/errors/reportError";
 import {
   type AuthUser,
   getAuthErrorMessage,
@@ -48,6 +49,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setError(null);
         }
       } catch (sessionError) {
+        reportError(sessionError, {
+          scope: "AuthContext.restoreSession",
+          operation: "restore-session",
+        });
         if (active && currentRequest === requestId) {
           setUser(null);
           setError(getAuthErrorMessage(sessionError));
@@ -72,6 +77,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setError(null);
         }
       } catch (sessionError) {
+        reportError(sessionError, {
+          scope: "AuthContext.synchronizeUser",
+          operation: "synchronize-user",
+        });
         if (active && currentRequest === requestId) {
           setUser(null);
           setError(getAuthErrorMessage(sessionError));
@@ -129,6 +138,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(loggedUser);
       return true;
     } catch (loginError) {
+      reportError(loginError, {
+        scope: "AuthContext.login",
+        operation: "login",
+      });
       setUser(null);
       setError(getAuthErrorMessage(loginError));
       return false;
@@ -143,7 +156,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       setError(null);
     } catch (logoutError) {
+      reportError(logoutError, {
+        scope: "AuthContext.logout",
+        operation: "logout",
+      });
       setError(getAuthErrorMessage(logoutError));
+      throw logoutError;
     } finally {
       setLoading(false);
     }

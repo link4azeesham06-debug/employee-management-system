@@ -100,12 +100,3 @@ export function getUserErrorMessage(error: unknown, fallbackMessage?: string): s
     fallbackMessage,
   }).userMessage;
 }
-
-export function logAppError(scope: string, error: unknown): void {
-  const normalized = normalizeError(error);
-  console.error(`[${scope}]`, {
-    code: normalized.code,
-    technicalMessage: normalized.technicalMessage ?? normalized.message,
-    metadata: normalized.metadata,
-  });
-}

@@ -12,7 +12,8 @@ export type AuditEntity =
   | "Department"
   | "User"
   | "Report"
-  | "System";
+  | "System"
+  | "Leave Request";
 
 export type AuditLog = {
   id: string;

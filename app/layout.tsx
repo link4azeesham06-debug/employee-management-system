@@ -10,7 +10,7 @@ import { NotificationProvider } from "@/context/NotificationContext";
 import { DepartmentProvider } from "@/context/DepartmentContext";
 
 export const metadata: Metadata = {
-  title: "HR Pro | Secure Workforce Management",
+  title: "HR | HR Management System",
   description:
     "A secure HR management workspace for employee records, departments, reporting, audit history, and notifications.",
 };

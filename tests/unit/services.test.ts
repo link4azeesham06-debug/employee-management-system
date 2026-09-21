@@ -1,14 +1,13 @@
 import type { User } from "@supabase/supabase-js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { AppError } from "@/lib/errors/AppError";
-
 const supabaseMocks = vi.hoisted(() => ({
   from: vi.fn(),
   getUser: vi.fn(),
   getSession: vi.fn(),
   signInWithPassword: vi.fn(),
   signOut: vi.fn(),
+  rpc: vi.fn(),
 }));
 
 vi.mock("@/lib/supabase/client", () => ({
@@ -20,12 +19,18 @@ vi.mock("@/lib/supabase/client", () => ({
       signInWithPassword: supabaseMocks.signInWithPassword,
       signOut: supabaseMocks.signOut,
     },
+    rpc: supabaseMocks.rpc,
   },
 }));
 
 import { loadAuthUser } from "@/services/authService";
 import { addDepartment, deleteDepartment } from "@/services/departmentApi";
 import { addEmployee, getEmployees } from "@/services/employeeApi";
+import {
+  approveLeaveRequest,
+  createLeaveRequest,
+  rejectLeaveRequest,
+} from "@/services/leaveService";
 
 type QueryResult = {
   data?: unknown;
@@ -118,7 +123,7 @@ describe("department service", () => {
   it("prevents deletion when employees are assigned", async () => {
     supabaseMocks.from.mockReturnValueOnce(queryReturning({ count: 2, error: null }));
     await expect(deleteDepartment("11111111-1111-4111-8111-111111111111"))
-      .rejects.toEqual(expect.objectContaining<AppError>({ code: "CONFLICT" }));
+      .rejects.toMatchObject({ code: "CONFLICT" });
     expect(supabaseMocks.from).toHaveBeenCalledTimes(1);
   });
 });
@@ -145,6 +150,104 @@ describe("auth service", () => {
     await expect(loadAuthUser(authUser)).rejects.toMatchObject({
       code: "NOT_FOUND",
       userMessage: "Your account profile is not configured.",
+    });
+  });
+});
+
+describe("leave service", () => {
+  const pendingLeave = {
+    id: "22222222-2222-4222-8222-222222222222",
+    employee_id: "employee-id",
+    leave_type: "Annual",
+    start_date: "2026-10-12",
+    end_date: "2026-10-16",
+    reason: "Family travel plans",
+    status: "Pending",
+    reviewed_by: null,
+    reviewed_at: null,
+    created_at: "2026-09-07T09:00:00.000Z",
+    updated_at: "2026-09-07T09:00:00.000Z",
+  };
+
+  it("derives employee ownership from the authenticated profile", async () => {
+    const insertQuery = queryReturning({ data: pendingLeave, error: null });
+    supabaseMocks.getUser.mockResolvedValue({ data: { user: authUser }, error: null });
+    supabaseMocks.from
+      .mockReturnValueOnce(queryReturning({
+        data: { id: authUser.id, role: "employee", employee_id: "employee-id" },
+        error: null,
+      }))
+      .mockReturnValueOnce(insertQuery);
+
+    await expect(createLeaveRequest({
+      leaveType: "Annual",
+      startDate: "2026-10-12",
+      endDate: "2026-10-16",
+      reason: "Family travel plans",
+    })).resolves.toMatchObject({ employeeId: "employee-id", status: "Pending" });
+
+    expect(insertQuery.insert).toHaveBeenCalledWith({
+      employee_id: "employee-id",
+      leave_type: "Annual",
+      start_date: "2026-10-12",
+      end_date: "2026-10-16",
+      reason: "Family travel plans",
+    });
+  });
+
+  it("approves through one RPC without client-supplied actor or recipient IDs", async () => {
+    supabaseMocks.rpc.mockResolvedValue({
+      data: { ...pendingLeave, status: "Approved", reviewed_by: authUser.id },
+      error: null,
+    });
+
+    await expect(approveLeaveRequest(pendingLeave.id)).resolves.toMatchObject({
+      id: pendingLeave.id,
+      status: "Approved",
+    });
+    expect(supabaseMocks.rpc).toHaveBeenCalledWith("review_leave_request", {
+      p_leave_request_id: pendingLeave.id,
+      p_decision: "Approved",
+    });
+    expect(supabaseMocks.from).not.toHaveBeenCalled();
+  });
+
+  it("rejects through the review RPC", async () => {
+    supabaseMocks.rpc.mockResolvedValue({
+      data: { ...pendingLeave, status: "Rejected", reviewed_by: authUser.id },
+      error: null,
+    });
+
+    await expect(rejectLeaveRequest(pendingLeave.id)).resolves.toMatchObject({
+      status: "Rejected",
+    });
+    expect(supabaseMocks.rpc).toHaveBeenCalledWith("review_leave_request", {
+      p_leave_request_id: pendingLeave.id,
+      p_decision: "Rejected",
+    });
+  });
+
+  it("maps an already-reviewed RPC failure to a conflict", async () => {
+    supabaseMocks.rpc.mockResolvedValue({
+      data: null,
+      error: { code: "P0001", message: "LEAVE_ALREADY_REVIEWED" },
+    });
+
+    await expect(approveLeaveRequest(pendingLeave.id)).rejects.toMatchObject({
+      code: "CONFLICT",
+      userMessage: "Only pending leave requests can be reviewed.",
+    });
+  });
+
+  it("maps database authorization failures without exposing raw details", async () => {
+    supabaseMocks.rpc.mockResolvedValue({
+      data: null,
+      error: { code: "42501", message: "LEAVE_REVIEW_FORBIDDEN" },
+    });
+
+    await expect(approveLeaveRequest(pendingLeave.id)).rejects.toMatchObject({
+      code: "FORBIDDEN",
+      userMessage: "Only administrators can review leave requests.",
     });
   });
 });

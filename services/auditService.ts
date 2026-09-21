@@ -57,6 +57,7 @@ const AUDIT_ENTITIES: AuditEntity[] = [
   "User",
   "Report",
   "System",
+  "Leave Request",
 ];
 
 function auditError(error: { code?: string; message: string }): AppError {

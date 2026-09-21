@@ -2,11 +2,16 @@
 
 :root {
   --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
   --color-primary-dark: #3730a3;
+  --color-primary-soft: #eef2ff;
   --color-background: #f8fafc;
   --color-surface: #ffffff;
+  --color-surface-subtle: #f8fafc;
   --color-text: #0f172a;
+  --color-text-primary: #0f172a;
   --color-muted: #64748b;
+  --color-text-secondary: #64748b;
   --color-border: #e2e8f0;
   --color-success: #059669;
   --color-warning: #d97706;
@@ -16,6 +21,49 @@
   --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04),
     0 1px 3px rgb(15 23 42 / 0.06);
   --shadow-floating: 0 18px 45px rgb(15 23 42 / 0.14);
+  --shadow-brand-panel: 0 24px 70px rgb(15 23 42 / 0.18);
+}
+
+.brand-grid-pattern {
+  background-image:
+    radial-gradient(circle, rgb(129 140 248 / 0.5) 1px, transparent 1.5px),
+    linear-gradient(rgb(148 163 184 / 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(148 163 184 / 0.12) 1px, transparent 1px);
+  background-position: 0 0;
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at center, black 12%, transparent 76%);
+}
+
+@keyframes brand-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+@keyframes brand-depth-drift {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -4px;
+  }
+}
+
+.brand-float-slow {
+  animation: brand-float 6s ease-in-out infinite;
+}
+
+.brand-float-delayed {
+  animation: brand-float 7s ease-in-out 1.2s infinite;
+}
+
+.brand-depth-drift {
+  animation: brand-depth-drift 9s ease-in-out infinite;
 }
 
 * {

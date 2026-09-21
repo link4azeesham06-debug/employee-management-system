@@ -22,7 +22,7 @@ import {
   AuditLog,
 } from "@/types/audit";
 import { useAuth } from "@/hooks/useAuth";
-import { logAppError } from "@/lib/errors/normalizeError";
+import { reportError } from "@/lib/errors/reportError";
 
 type AuditContextType = {
   logs: AuditLog[];
@@ -72,7 +72,7 @@ export function AuditProvider({
 
       setLogs(await getAuditLogs());
     } catch (error) {
-      logAppError("AuditContext.refreshLogs", error);
+      reportError(error, { scope: "AuditContext.refreshLogs" });
       setLogs([]);
     } finally {
       setLoading(false);

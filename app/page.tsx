@@ -1,190 +1,199 @@
 import Link from "next/link";
-import PublicNavbar from "@/components/landing/PublicNavbar";
 import {
   ArrowRight,
   BarChart3,
   Bell,
   Building2,
+  CalendarCheck2,
   Check,
+  CheckCircle2,
   ChevronRight,
   CircleUserRound,
-  ClipboardCheck,
-  Database,
   FileClock,
-  Fingerprint,
   LayoutDashboard,
   LockKeyhole,
-  MonitorSmartphone,
-  Network,
   ShieldCheck,
-  Sparkles,
   UserCheck,
   Users,
 } from "lucide-react";
 
-const features = [
-  { title: "Employee management", description: "Create, update, search, filter, and organize employee records from one focused workspace.", icon: Users, wide: true },
-  { title: "Department structure", description: "Maintain departments and keep workforce assignments connected to the organization.", icon: Building2 },
-  { title: "Reports and analytics", description: "Understand headcount, employment status, department distribution, and hiring activity.", icon: BarChart3 },
-  { title: "Role-based access", description: "Give administrators operational control while employees securely access their own record.", icon: Fingerprint, wide: true },
-  { title: "Audit history", description: "Review employee and department changes with performer details and timestamps.", icon: FileClock, wide: true },
-  { title: "Persistent notifications", description: "Keep account-specific updates synchronized across the navbar and notification workspace.", icon: Bell },
+import BrandGrid from "@/components/brand/BrandGrid";
+import BrandLogo from "@/components/brand/BrandLogo";
+import PublicNavbar from "@/components/landing/PublicNavbar";
+
+const workflowSteps = [
+  { label: "Employee", detail: "Submits dates and reason", tone: "slate" },
+  { label: "Pending", detail: "Request waits for review", tone: "amber" },
+  { label: "Admin review", detail: "Approve or reject once", tone: "indigo" },
+  { label: "Decision", detail: "Status becomes final", tone: "emerald" },
 ];
 
-const technologies = ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "PostgreSQL", "Row Level Security"];
+const permissionRows = [
+  { capability: "Employee records", admin: "All", employee: "Own record" },
+  { capability: "Leave", admin: "Review", employee: "Request" },
+  { capability: "Departments", admin: "Manage", employee: false },
+  { capability: "Reports", admin: "View", employee: false },
+  { capability: "Audit", admin: "View", employee: false },
+  { capability: "Settings", admin: "Manage", employee: false },
+];
+
+const footerGroups = [
+  { title: "Product", links: [["Overview", "#product"], ["Leave management", "#workflow"], ["Analytics", "#insights"], ["Security", "#security"]] },
+  { title: "Access", links: [["Explore HR", "/login"], ["Sign in", "/login"]] },
+] as const;
 
 export default function LandingPage() {
   return (
     <div className="min-h-dvh overflow-x-clip bg-white text-slate-950">
       <PublicNavbar />
       <main>
-        <section className="relative isolate overflow-hidden border-b border-slate-200 bg-slate-950" aria-labelledby="hero-title">
-          <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_12%_15%,rgba(99,102,241,0.22),transparent_34%),radial-gradient(circle_at_88%_22%,rgba(139,92,246,0.18),transparent_30%),linear-gradient(to_bottom,#0f172a,#111827)]" />
-          <div className="absolute inset-0 -z-10 opacity-[0.07] [background-image:linear-gradient(rgba(255,255,255,.7)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.7)_1px,transparent_1px)] [background-size:48px_48px]" aria-hidden="true" />
-          <div className="mx-auto grid w-full max-w-7xl items-center gap-14 px-4 pb-16 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:grid-cols-[minmax(0,0.88fr)_minmax(34rem,1.12fr)] lg:px-8 lg:pb-28 lg:pt-24">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-indigo-300/20 bg-indigo-400/10 px-3.5 py-2 text-xs font-semibold text-indigo-200 backdrop-blur"><Sparkles size={14} aria-hidden="true" />Secure workforce operations, clearly organized</div>
-              <h1 id="hero-title" className="mt-7 text-4xl font-bold tracking-[-0.04em] text-white sm:text-5xl lg:text-6xl xl:text-7xl">Every workforce decision, in one clear view.</h1>
-              <p className="mt-6 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">HR Pro brings employee records, departments, reporting, audit history, and account-specific notifications into a secure operational workspace.</p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link href="/login" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-indigo-500 px-5 text-sm font-semibold text-white shadow-lg shadow-indigo-950/30 transition hover:bg-indigo-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950">Try the demo <ArrowRight size={17} aria-hidden="true" /></Link>
-                <Link href="#features" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-5 text-sm font-semibold text-white backdrop-blur transition hover:border-white/25 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300">Explore features <ChevronRight size={17} aria-hidden="true" /></Link>
+        <section className="relative isolate overflow-hidden border-b border-indigo-950 bg-slate-950 text-white" aria-labelledby="hero-title">
+          <BrandGrid className="-z-10 opacity-25" />
+          <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_12%_16%,rgba(129,140,248,0.3),transparent_31%),radial-gradient(circle_at_88%_26%,rgba(99,102,241,0.36),transparent_34%),linear-gradient(122deg,#0f172a_0%,#1e1b4b_46%,#3730a3_100%)]" aria-hidden="true" />\n          <div className="absolute -right-24 top-0 -z-10 h-full w-1/2 skew-x-[-10deg] border-l border-white/10 bg-white/[0.025]" aria-hidden="true" />
+          <div className="mx-auto grid w-full max-w-[90rem] items-center gap-12 px-4 py-14 sm:px-6 sm:py-20 lg:min-h-[calc(100dvh-4.5rem)] lg:grid-cols-[minmax(0,0.76fr)_minmax(36rem,1.24fr)] lg:gap-8 lg:px-8 lg:py-20">
+            <div className="relative z-10 max-w-2xl">
+              <p className="inline-flex items-center gap-2 border-l-2 border-indigo-300 pl-3 text-xs font-bold uppercase tracking-[0.2em] text-indigo-200">People operations, made legible</p>
+              <h1 id="hero-title" className="mt-7 text-[clamp(2.8rem,6.6vw,5.9rem)] font-extrabold leading-[0.96] tracking-[-0.065em] text-white">Run every people decision from one clear system.</h1>
+              <p className="mt-7 max-w-xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">Employees, leave, departments, permissions, analytics, and audit history stay connected—so the next action is always clear.</p>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <Link href="/login" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-6 text-sm font-bold text-indigo-800 shadow-xl shadow-slate-950/20 transition hover:-translate-y-0.5 hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900">Explore HR <ArrowRight size={17} aria-hidden="true" /></Link>
+                <Link href="#product" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/[0.07] px-6 text-sm font-bold text-white backdrop-blur transition hover:border-white/35 hover:bg-white/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-200">View capabilities <ChevronRight size={17} aria-hidden="true" /></Link>
               </div>
-              <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs font-medium text-slate-400" aria-label="Product assurances">
-                {["Supabase authentication", "Role-aware access", "Responsive workspace"].map((item) => <li key={item} className="flex items-center gap-1.5"><Check size={14} className="text-emerald-400" aria-hidden="true" />{item}</li>)}
-              </ul>
-            </div>
-            <HeroProductMockup />
-          </div>
-        </section>
-
-        <section id="features" className="scroll-mt-24 bg-slate-50 py-20 sm:py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <SectionHeading eyebrow="One connected workspace" title="Built around real HR operations" description="Every capability shown here is part of the application—designed to keep everyday workforce administration clear, traceable, and secure." />
-            <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {features.map(({ title, description, icon: Icon, wide }, index) => (
-                <article key={title} className={`group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg hover:shadow-slate-900/5 sm:p-7 ${wide ? "lg:col-span-2" : ""}`}>
-                  <div className="absolute right-0 top-0 h-28 w-28 translate-x-10 -translate-y-10 rounded-full bg-indigo-100/60 blur-2xl transition group-hover:bg-indigo-200/70" aria-hidden="true" />
-                  <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-inset ring-indigo-100"><Icon size={21} aria-hidden="true" /></div>
-                  <p className="mt-8 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">0{index + 1}</p>
-                  <h3 className="mt-2 text-lg font-bold text-slate-950">{title}</h3>
-                  <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600">{description}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="security" className="scroll-mt-24 overflow-hidden bg-white py-20 sm:py-24">
-          <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
-            <div>
-              <SectionHeading eyebrow="Security by design" title="The right view for every role" description="Authentication, protected routes, and database policies work together so access stays aligned with each account." align="left" />
-              <div className="mt-8 grid gap-5 sm:grid-cols-2">
-                <SecurityPoint icon={LockKeyhole} title="Supabase Auth" description="Session-based sign-in and refresh persistence without storing passwords in the application." />
-                <SecurityPoint icon={Database} title="Row Level Security" description="Database policies enforce account-level data access beyond the interface layer." />
-                <SecurityPoint icon={ShieldCheck} title="Protected routes" description="Administrative workspaces remain unavailable to employee accounts." />
-                <SecurityPoint icon={UserCheck} title="Own-record access" description="Employees securely access their linked personal workforce record." />
+              <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/15 pt-6 text-xs font-semibold text-slate-300" aria-label="Product foundations">
+                {["Supabase authentication", "Role-aware workspace", "Traceable workflows"].map((item) => <span key={item} className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-indigo-300" aria-hidden="true" />{item}</span>)}
               </div>
             </div>
-            <AccessMatrix />
+            <HeroComposition />
           </div>
         </section>
 
-        <section id="analytics" className="scroll-mt-24 border-y border-slate-200 bg-slate-950 py-20 text-white sm:py-24">
-          <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(32rem,1.2fr)] lg:gap-16 lg:px-8">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-300">Workforce intelligence</p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Reporting grounded in current records.</h2>
-              <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">Headcount metrics, department distribution, status insights, and hiring activity are calculated from the workforce data available to the signed-in account.</p>
-              <ul className="mt-7 space-y-3 text-sm text-slate-300">{["Filter reports by department, status, and joined date", "Compare active, on-leave, and inactive records", "Export filtered workforce reporting as CSV"].map((item) => <li key={item} className="flex items-start gap-2.5"><Check size={17} className="mt-0.5 shrink-0 text-emerald-400" aria-hidden="true" />{item}</li>)}</ul>
-            </div>
-            <AnalyticsPreview />
-          </div>
-        </section>
-
-        <section className="bg-white py-20 sm:py-24">
+        <section id="product" className="scroll-mt-24 overflow-hidden bg-white py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <SectionHeading eyebrow="Operational awareness" title="Changes stay visible. Updates stay connected." description="Administrative actions feed a persistent audit trail, while user-specific notifications keep relevant activity close at hand." />
-            <div className="mt-10 grid gap-5 lg:grid-cols-2">
-              <OperationalCard icon={ClipboardCheck} eyebrow="Audit trail" title="A dependable record of operational change" items={["Employee create, update, status, and delete activity", "Department mutation history", "Performer identity, role, and valid timestamps", "Search, filters, export, and administrative cleanup"]} />
-              <OperationalCard icon={Bell} eyebrow="Notifications" title="Account-specific updates that persist" items={["Synchronized navbar unread count", "Mark one or every notification as read", "Refresh-persistent Supabase records", "User-level isolation through database policies"]} />
-            </div>
-          </div>
-        </section>
-
-        <section className="overflow-hidden bg-slate-50 py-20 sm:py-24" aria-labelledby="responsive-title">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid items-center gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16">
+            <div className="grid gap-14 lg:grid-cols-[0.7fr_1.3fr] lg:items-center lg:gap-24">
               <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"><MonitorSmartphone size={23} aria-hidden="true" /></div>
-                <p className="mt-7 text-xs font-bold uppercase tracking-[0.18em] text-indigo-600">Responsive by default</p>
-                <h2 id="responsive-title" className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Work comfortably at every screen size.</h2>
-                <p className="mt-4 text-base leading-7 text-slate-600">The workspace adapts from full desktop tables to focused mobile cards, with navigation and controls designed to remain usable across devices.</p>
+                <SectionLabel>One operating picture</SectionLabel>
+                <h2 className="mt-5 text-3xl font-extrabold leading-tight tracking-[-0.04em] text-slate-950 sm:text-5xl">Records become useful when the relationships stay visible.</h2>
+                <p className="mt-6 text-base leading-7 text-slate-600">HR keeps identity, department, position, employment status, and role together. Administrators work across the organization; employees see the record that belongs to them.</p>
+                <dl className="mt-9 border-y border-slate-200">
+                  {[["Structured", "Employee and department records share one model"], ["Current", "Status changes appear throughout the workspace"], ["Role-aware", "Each account gets the right operational view"]].map(([term, detail]) => <div key={term} className="grid gap-1 border-b border-slate-200 py-4 last:border-b-0 sm:grid-cols-[7rem_1fr]"><dt className="text-sm font-bold text-slate-950">{term}</dt><dd className="text-sm leading-6 text-slate-500">{detail}</dd></div>)}
+                </dl>
               </div>
-              <ResponsivePreview />
+              <PeopleOperationsVisual />
             </div>
           </div>
         </section>
 
-        <section className="border-y border-slate-200 bg-white py-12" aria-label="Technology architecture">
+        <section id="workflow" className="scroll-mt-24 border-y border-slate-200 bg-slate-50 py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <p className="text-center text-xs font-bold uppercase tracking-[0.18em] text-slate-400">Built on a modern, typed, policy-aware stack</p>
-            <ul className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">{technologies.map((technology) => <li key={technology} className="flex min-h-12 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 px-3 text-center text-sm font-semibold text-slate-700">{technology}</li>)}</ul>
+            <div className="max-w-3xl">
+              <SectionLabel>Controlled leave workflow</SectionLabel>
+              <h2 className="mt-5 text-3xl font-extrabold tracking-[-0.04em] text-slate-950 sm:text-5xl">A request moves forward. Its history stays behind.</h2>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600">Employees submit leave for review. Administrators make a final decision, and HR records the result in both the notification stream and audit history.</p>
+            </div>
+            <LeaveWorkflow />
           </div>
         </section>
 
-        <section id="demo" className="scroll-mt-24 bg-white px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
-          <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-indigo-600 px-5 py-12 text-white shadow-2xl shadow-indigo-950/20 sm:px-10 sm:py-14 lg:px-16">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,rgba(255,255,255,0.22),transparent_28%),radial-gradient(circle_at_10%_100%,rgba(55,48,163,0.65),transparent_38%)]" aria-hidden="true" />
-            <div className="relative grid items-center gap-9 lg:grid-cols-[1fr_auto]">
-              <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-100">Explore the working product</p><h2 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl">See secure HR operations from both sides.</h2><p className="mt-4 max-w-2xl text-sm leading-6 text-indigo-100 sm:text-base">Use the intentionally public portfolio accounts to explore administrative workflows or the restricted employee experience.</p><div className="mt-6 grid max-w-2xl gap-3 sm:grid-cols-2"><DemoCredential role="Admin demo" email="admin@hr.com" password="admin123" /><DemoCredential role="Employee demo" email="employee@hrpro.demo" password="employee123" /></div></div>
-              <Link href="/login" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-6 text-sm font-bold text-indigo-700 shadow-lg transition hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-600">Sign in to HR Pro <ArrowRight size={17} aria-hidden="true" /></Link>
+        <section id="security" className="scroll-mt-24 bg-white py-20 sm:py-28">
+          <div className="mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-20 lg:px-8">
+            <div>
+              <SectionLabel>Access with boundaries</SectionLabel>
+              <h2 className="mt-5 text-3xl font-extrabold tracking-[-0.04em] text-slate-950 sm:text-5xl">The interface guides. The database enforces.</h2>
+              <p className="mt-6 text-base leading-7 text-slate-600">Role-aware navigation keeps the workspace focused. Supabase Row Level Security remains the final boundary for workforce data.</p>
+              <div className="mt-8 flex items-start gap-4 border-l-2 border-indigo-200 pl-5"><LockKeyhole className="mt-0.5 shrink-0 text-indigo-600" size={20} aria-hidden="true" /><p className="text-sm leading-6 text-slate-600">Employee accounts can work with their own record, leave requests, and notifications without exposing administrator-only operations.</p></div>
             </div>
+            <PermissionMatrix />
+          </div>
+        </section>
+
+        <section id="insights" className="scroll-mt-24 overflow-hidden bg-[#f4f5f9] py-20 sm:py-28">
+          <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[0.65fr_1.35fr] lg:gap-20 lg:px-8">
+            <div>
+              <SectionLabel>Workforce reporting</SectionLabel>
+              <h2 className="mt-5 text-3xl font-extrabold tracking-[-0.04em] text-slate-950 sm:text-5xl">Read the workforce as it is now.</h2>
+              <p className="mt-6 text-base leading-7 text-slate-600">Headcount, department coverage, employment status, and hiring activity are calculated from current records—not marketing estimates.</p>
+              <ul className="mt-8 space-y-3 text-sm font-medium text-slate-700">{["Filter the reporting view", "Compare workforce categories", "Export the visible result as CSV"].map((item) => <li key={item} className="flex items-center gap-3"><CheckCircle2 size={17} className="text-emerald-600" aria-hidden="true" />{item}</li>)}</ul>
+            </div>
+            <AnalyticsCanvas />
+          </div>
+        </section>
+
+        <section className="relative isolate overflow-hidden bg-slate-950 py-20 text-white sm:py-28">
+          <BrandGrid className="-z-10 opacity-25" />
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-14 lg:grid-cols-[0.7fr_1.3fr] lg:items-center lg:gap-24">
+              <div><p className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-300">Operational visibility</p><h2 className="mt-5 text-3xl font-extrabold tracking-[-0.04em] sm:text-5xl">Important actions leave a useful trace.</h2><p className="mt-6 text-base leading-7 text-slate-300">Decisions do not disappear after a save. The audit timeline records the action, while the right account receives a persistent notification.</p></div>
+              <OperationalFlow />
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-white px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-indigo-600 px-6 py-14 text-white shadow-2xl shadow-indigo-950/20 sm:px-12 lg:px-16">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_88%_12%,rgba(255,255,255,0.2),transparent_28%),linear-gradient(125deg,transparent_40%,rgba(49,46,129,0.45))]" aria-hidden="true" />
+            <div className="relative grid items-end gap-8 lg:grid-cols-[1fr_auto]"><div><p className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-100">The working portfolio experience</p><h2 className="mt-4 max-w-3xl text-3xl font-extrabold tracking-[-0.04em] sm:text-5xl">Explore the product from either side of the workflow.</h2><p className="mt-5 max-w-2xl text-sm leading-6 text-indigo-100 sm:text-base">Sign in as an administrator or employee using the role options provided on the login screen.</p></div><Link href="/login" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-6 text-sm font-bold text-indigo-700 shadow-lg transition hover:-translate-y-0.5 hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-600">Explore HR <ArrowRight size={17} aria-hidden="true" /></Link></div>
           </div>
         </section>
       </main>
-
-      <footer className="border-t border-slate-200 bg-slate-950 text-slate-300">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8"><Link href="/" className="inline-flex items-center gap-2.5 font-bold text-white" aria-label="HR Pro home"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500"><ShieldCheck size={19} aria-hidden="true" /></span>HR Pro</Link><nav aria-label="Footer navigation"><ul className="flex flex-wrap gap-x-5 gap-y-3 text-sm"><li><Link className="transition hover:text-white" href="#features">Features</Link></li><li><Link className="transition hover:text-white" href="#security">Security</Link></li><li><Link className="transition hover:text-white" href="#analytics">Analytics</Link></li><li><Link className="transition hover:text-white" href="/login">Demo sign in</Link></li></ul></nav><p className="text-xs text-slate-500">HR management portfolio application</p></div>
-      </footer>
+      <LandingFooter />
     </div>
   );
 }
 
-function HeroProductMockup() {
-  return <div className="relative mx-auto w-full max-w-3xl lg:translate-x-6" aria-label="HR Pro dashboard interface preview"><div className="absolute -inset-6 rounded-[2rem] bg-indigo-500/15 blur-3xl" aria-hidden="true" /><div className="relative overflow-hidden rounded-2xl border border-white/15 bg-white/[0.08] p-2 shadow-2xl shadow-black/35 backdrop-blur sm:p-3"><div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50"><div className="flex h-9 items-center gap-1.5 border-b border-slate-200 bg-white px-3"><span className="h-2.5 w-2.5 rounded-full bg-red-400" /><span className="h-2.5 w-2.5 rounded-full bg-amber-400" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-400" /><div className="mx-auto h-5 w-40 rounded-md bg-slate-100" /></div><div className="grid min-h-[390px] grid-cols-[3.5rem_1fr] sm:grid-cols-[9rem_1fr]"><div className="bg-slate-950 p-3 text-white"><div className="flex items-center gap-2 text-xs font-bold"><span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600"><ShieldCheck size={14} /></span><span className="hidden sm:inline">HR Pro</span></div><div className="mt-8 space-y-2">{[LayoutDashboard, Users, Building2, BarChart3, Bell].map((Icon, index) => <div key={index} className={`flex h-8 items-center gap-2 rounded-lg px-2 ${index === 0 ? "bg-indigo-600" : "text-slate-500"}`}><Icon size={13} aria-hidden="true" /><span className="hidden h-1.5 w-14 rounded bg-current opacity-40 sm:block" /></div>)}</div></div><div className="min-w-0 p-3 sm:p-5"><div className="flex items-center justify-between"><div><div className="h-2 w-20 rounded bg-indigo-200" /><div className="mt-2 h-4 w-32 rounded bg-slate-800" /></div><div className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-indigo-600"><CircleUserRound size={16} /></div></div><div className="mt-5 grid grid-cols-2 gap-2 xl:grid-cols-4">{[Users, Building2, Network, UserCheck].map((Icon, index) => <div key={index} className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm"><div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600"><Icon size={14} /></div><div className="mt-3 h-2 w-14 rounded bg-slate-200" /><div className="mt-2 h-4 w-8 rounded bg-slate-800" /></div>)}</div><div className="mt-3 grid gap-3 sm:grid-cols-[1.25fr_0.75fr]"><div className="rounded-xl border border-slate-200 bg-white p-3"><div className="h-2.5 w-28 rounded bg-slate-700" /><div className="mt-5 flex h-32 items-end gap-2 border-b border-l border-slate-100 px-2">{[45, 72, 56, 88, 64, 78].map((height, index) => <div key={index} className="flex-1 rounded-t bg-indigo-500/80" style={{ height: `${height}%` }} />)}</div></div><div className="rounded-xl border border-slate-200 bg-white p-3"><div className="h-2.5 w-24 rounded bg-slate-700" /><div className="mt-5 space-y-3">{["bg-emerald-500", "bg-amber-500", "bg-red-500"].map((tone) => <div key={tone} className="flex items-center gap-2"><span className={`h-2 w-2 rounded-full ${tone}`} /><span className="h-2 flex-1 rounded bg-slate-100" /><span className="h-2 w-5 rounded bg-slate-200" /></div>)}</div></div></div></div></div></div></div><div className="absolute -bottom-5 -left-3 hidden items-center gap-3 rounded-2xl border border-white/20 bg-white/95 p-3 shadow-xl backdrop-blur sm:flex"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600"><ShieldCheck size={18} /></span><span><span className="block text-xs font-bold text-slate-900">Policy-aware access</span><span className="block text-[11px] text-slate-500">Protected at the data layer</span></span></div></div>;
+function HeroComposition() {
+  return (
+    <div className="relative mx-auto w-full max-w-[50rem] pb-20 pt-8 sm:pb-24 lg:min-h-[38rem] lg:py-10" aria-label="Layered preview of the HR workspace">
+      <div className="absolute left-[4%] top-[8%] h-72 w-72 rounded-full bg-indigo-300/20 blur-3xl" aria-hidden="true" />
+      <div className="absolute right-[5%] top-[18%] h-80 w-80 rounded-full bg-violet-300/15 blur-3xl" aria-hidden="true" />
+      <div className="brand-depth-drift relative ml-auto mt-5 w-[97%] origin-center overflow-hidden rounded-2xl border border-white/40 bg-white shadow-[0_42px_110px_rgba(8,15,40,0.48)] sm:mt-8 sm:w-[90%] lg:[transform:perspective(1400px)_rotateY(-4deg)_rotateX(1deg)]">
+        <div className="flex h-11 items-center gap-2 border-b border-slate-200 bg-white/95 px-4"><BrandLogo markSize={24} decorative wordmarkClassName="text-sm" /><span className="ml-auto rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700">Workspace live</span></div>
+        <div className="grid min-h-[21rem] grid-cols-[3.25rem_1fr] bg-slate-50 sm:min-h-[25rem] sm:grid-cols-[8rem_1fr]">
+          <div className="bg-slate-950 p-2.5 sm:p-3"><div className="space-y-2 pt-4">{[LayoutDashboard, Users, CalendarCheck2, BarChart3].map((Icon, index) => <div key={index} className={`flex h-8 items-center gap-2 rounded-lg px-2 ${index === 0 ? "bg-indigo-600 text-white" : "text-slate-500"}`}><Icon size={13} aria-hidden="true" /><span className="hidden h-1.5 w-12 rounded bg-current opacity-40 sm:block" /></div>)}</div></div>
+          <div className="min-w-0 p-3 sm:p-5">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-indigo-600">Dashboard</p><div className="mt-1 flex items-end justify-between"><p className="text-base font-extrabold text-slate-900 sm:text-lg">Workforce overview</p><CircleUserRound size={22} className="text-indigo-600" aria-hidden="true" /></div>
+            <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">{["Employees", "Departments", "Positions", "Active status"].map((label, index) => <div key={label} className="border-t-2 border-indigo-500 bg-white p-2.5 shadow-sm"><p className="text-[9px] font-semibold text-slate-400">{label}</p><p className="mt-2 text-xs font-extrabold text-slate-800">{index === 3 ? "Current" : "Live"}</p></div>)}</div>
+            <div className="mt-3 hidden gap-3 sm:grid sm:grid-cols-[1.3fr_0.7fr]"><div className="bg-white p-3 shadow-sm"><div className="flex items-center justify-between"><p className="text-[10px] font-bold text-slate-700">Hiring activity</p><span className="text-[8px] text-slate-400">From records</span></div><div className="mt-5 flex h-28 items-end gap-2 border-b border-l border-slate-100 px-2">{[38, 62, 48, 82, 58, 72].map((height, index) => <span key={index} className="flex-1 rounded-t-sm bg-indigo-500/75" style={{ height: `${height}%` }} />)}</div></div><div className="bg-white p-3 shadow-sm"><p className="text-[10px] font-bold text-slate-700">Status view</p><div className="mt-5 space-y-4">{["Active", "On leave", "Inactive"].map((label, index) => <div key={label}><div className="flex justify-between text-[8px] text-slate-500"><span>{label}</span><span>Live</span></div><div className="mt-1 h-1.5 bg-slate-100"><div className={`h-full ${index === 0 ? "w-4/5 bg-emerald-500" : index === 1 ? "w-2/5 bg-amber-500" : "w-1/4 bg-slate-400"}`} /></div></div>)}</div></div></div>
+            <div className="mt-3 space-y-2 sm:hidden">{["Leave request awaiting review", "Notification delivered"].map((item, index) => <div key={item} className="flex items-center gap-2 bg-white px-3 py-2 text-[9px] font-semibold text-slate-600 shadow-sm"><span className={`h-1.5 w-1.5 rounded-full ${index === 0 ? "bg-amber-500" : "bg-indigo-500"}`} />{item}</div>)}</div>
+          </div>
+        </div>
+      </div>
+      <div className="brand-float-delayed absolute right-0 top-0 z-20 hidden w-[13.5rem] rounded-2xl border border-white/30 bg-white/95 p-4 shadow-2xl backdrop-blur md:block"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-xs font-extrabold text-indigo-700">AK</span><div><p className="text-xs font-extrabold text-slate-900">Employee profile</p><p className="mt-1 text-[10px] text-slate-500">Product Design · Active</p></div></div><div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-[9px]"><span className="text-slate-400">Own-record access</span><span className="font-bold text-emerald-600">Verified</span></div></div>
+      <div className="brand-float-slow absolute -left-1 bottom-1 z-20 w-[12.5rem] rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl sm:left-0 sm:w-[15rem]"><div className="flex items-start gap-3"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600"><CalendarCheck2 size={18} aria-hidden="true" /></span><div><p className="text-xs font-extrabold text-slate-900">Annual leave request</p><p className="mt-1 text-[10px] text-slate-500">Awaiting administrator review</p></div></div><div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3"><span className="rounded-full bg-amber-50 px-2 py-1 text-[9px] font-bold uppercase text-amber-700">Pending</span><span className="text-[10px] font-bold text-indigo-600">Review →</span></div></div>
+      <div className="brand-float-delayed absolute -right-1 bottom-5 z-20 hidden w-[13.5rem] rounded-2xl border border-indigo-100 bg-white/95 p-4 shadow-2xl backdrop-blur sm:block"><div className="flex items-center gap-3"><span className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-indigo-700"><Bell size={17} aria-hidden="true" /></span><div><p className="text-xs font-extrabold text-slate-900">Decision recorded</p><p className="mt-1 text-[10px] text-slate-500">Notification and audit updated</p></div></div></div>
+    </div>
+  );
 }
 
-function SectionHeading({ eyebrow, title, description, align = "center" }: { eyebrow: string; title: string; description: string; align?: "left" | "center" }) {
-  return <div className={align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-xl"}><p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-600">{eyebrow}</p><h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{title}</h2><p className="mt-4 text-base leading-7 text-slate-600">{description}</p></div>;
+function PeopleOperationsVisual() {
+  const people = [["Nadia Khan", "Product Design", "Active"], ["Omar Farooq", "Engineering", "On Leave"], ["Ayesha Malik", "People Operations", "Active"]];
+  return <div className="relative min-h-[31rem]"><div className="absolute inset-x-0 top-0 overflow-hidden border border-slate-200 bg-slate-50 shadow-[0_25px_70px_rgba(15,23,42,0.12)] sm:left-8"><div className="flex items-center justify-between border-b border-slate-200 bg-white px-5 py-4"><div><p className="text-sm font-extrabold text-slate-950">People directory</p><p className="mt-1 text-xs text-slate-500">Identity connected to structure</p></div><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600"><Users size={18} aria-hidden="true" /></span></div><div className="divide-y divide-slate-200 px-4 sm:px-6">{people.map(([name, department, status], index) => <div key={name} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 py-4 sm:gap-4"><span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-xs font-extrabold text-slate-700">{name.split(" ").map((part) => part[0]).join("")}</span><div className="min-w-0"><p className="truncate text-sm font-bold text-slate-900">{name}</p><p className="mt-0.5 truncate text-xs text-slate-500">{department}</p></div><span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${index === 1 ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>{status}</span></div>)}</div></div><div className="absolute bottom-0 left-0 w-[82%] border border-indigo-100 bg-white p-5 shadow-xl sm:w-[68%]"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-white"><Building2 size={19} aria-hidden="true" /></span><div><p className="text-xs font-semibold uppercase tracking-wide text-indigo-600">Department relationship</p><p className="mt-1 text-sm font-extrabold text-slate-950">People Operations</p></div></div><div className="mt-5 grid grid-cols-2 gap-4 border-t border-slate-100 pt-4 text-xs"><div><p className="text-slate-400">Record status</p><p className="mt-1 font-bold text-slate-800">Current</p></div><div><p className="text-slate-400">Access</p><p className="mt-1 font-bold text-slate-800">Role-aware</p></div></div></div></div>;
 }
 
-function SecurityPoint({ icon: Icon, title, description }: { icon: typeof ShieldCheck; title: string; description: string }) {
-  return <article><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600"><Icon size={19} aria-hidden="true" /></div><h3 className="mt-4 text-sm font-bold text-slate-950">{title}</h3><p className="mt-1.5 text-sm leading-6 text-slate-600">{description}</p></article>;
+function LeaveWorkflow() {
+  return <div className="mt-12 overflow-hidden border border-slate-200 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)]"><div className="grid lg:grid-cols-[1.12fr_0.88fr]"><div className="p-5 sm:p-8 lg:p-10"><div className="flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-start sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-indigo-600">Leave request</p><h3 className="mt-2 text-2xl font-extrabold text-slate-950">Annual leave</h3><p className="mt-1 text-sm text-slate-500">Submitted by an authenticated employee</p></div><span className="w-fit rounded-full bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-700">Pending review</span></div><div className="grid gap-6 py-7 sm:grid-cols-3">{["Start date", "End date", "Reason"].map((label) => <div key={label}><p className="text-xs font-semibold text-slate-400">{label}</p><div className="mt-2 h-2.5 w-4/5 rounded bg-slate-200" aria-hidden="true" /></div>)}</div><div className="flex flex-col gap-3 border-t border-slate-200 pt-6 sm:flex-row"><span className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-bold text-white"><Check size={17} aria-hidden="true" />Approve</span><span className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-300 px-5 text-sm font-bold text-slate-700">Reject with reason</span></div></div><div className="border-t border-slate-200 bg-slate-950 p-5 text-white sm:p-8 lg:border-l lg:border-t-0 lg:p-10"><p className="text-xs font-bold uppercase tracking-[0.16em] text-indigo-300">Decision path</p><ol className="mt-7 space-y-0">{workflowSteps.map((step, index) => <li key={step.label} className="relative flex gap-4 pb-7 last:pb-0">{index < workflowSteps.length - 1 && <span className="absolute left-[0.7rem] top-6 h-full w-px bg-slate-700" aria-hidden="true" />}<span className={`relative z-10 mt-0.5 h-6 w-6 shrink-0 rounded-full border-4 border-slate-950 ${step.tone === "amber" ? "bg-amber-400" : step.tone === "indigo" ? "bg-indigo-400" : step.tone === "emerald" ? "bg-emerald-400" : "bg-slate-400"}`} /><div><p className="text-sm font-bold">{step.label}</p><p className="mt-1 text-xs leading-5 text-slate-400">{step.detail}</p></div></li>)}</ol><div className="mt-8 grid grid-cols-2 gap-3 border-t border-slate-800 pt-6"><div className="bg-white/[0.06] p-3"><Bell size={16} className="text-indigo-300" aria-hidden="true" /><p className="mt-3 text-xs font-bold">Notification</p></div><div className="bg-white/[0.06] p-3"><FileClock size={16} className="text-indigo-300" aria-hidden="true" /><p className="mt-3 text-xs font-bold">Audit entry</p></div></div></div></div></div>;
 }
 
-function AccessMatrix() {
-  const rows = [{ feature: "Own profile", admin: true, employee: true }, { feature: "Employee records", admin: true, employee: "Own only" }, { feature: "Departments", admin: true, employee: false }, { feature: "Reports and audit", admin: true, employee: false }, { feature: "Notifications", admin: true, employee: true }];
-  return <div className="relative"><div className="absolute -inset-8 rounded-full bg-indigo-100/70 blur-3xl" aria-hidden="true" /><div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/8"><div className="flex items-center justify-between border-b border-slate-200 bg-slate-50/80 px-5 py-4"><div><p className="text-sm font-bold text-slate-950">Access policy</p><p className="mt-0.5 text-xs text-slate-500">Role-based workspace permissions</p></div><span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">Enforced</span></div><div className="grid grid-cols-[1.2fr_0.8fr_0.9fr] border-b border-slate-200 bg-white px-4 py-3 text-[11px] font-bold uppercase tracking-wide text-slate-400 sm:px-5"><span>Workspace</span><span>Admin</span><span>Employee</span></div>{rows.map((row) => <div key={row.feature} className="grid min-h-14 grid-cols-[1.2fr_0.8fr_0.9fr] items-center border-b border-slate-100 px-4 text-sm last:border-0 sm:px-5"><span className="font-medium text-slate-700">{row.feature}</span><AccessValue value={row.admin} /><AccessValue value={row.employee} /></div>)}</div></div>;
+function PermissionMatrix() {
+  return <div className="overflow-hidden border border-slate-200 bg-white shadow-[0_25px_70px_rgba(15,23,42,0.1)]"><div className="grid grid-cols-[1.2fr_0.8fr_0.8fr] border-b border-slate-200 bg-slate-950 px-4 py-4 text-xs font-bold uppercase tracking-wide text-white sm:px-6"><span>Capability</span><span>Admin</span><span>Employee</span></div><div className="divide-y divide-slate-200">{permissionRows.map((row) => <div key={row.capability} className="grid min-h-14 grid-cols-[1.2fr_0.8fr_0.8fr] items-center px-4 text-xs sm:px-6 sm:text-sm"><span className="font-semibold text-slate-800">{row.capability}</span><PermissionValue value={row.admin} /><PermissionValue value={row.employee} /></div>)}</div><div className="flex items-start gap-3 border-t border-indigo-100 bg-indigo-50 px-5 py-4 text-xs leading-5 text-indigo-900 sm:px-6"><ShieldCheck size={17} className="mt-0.5 shrink-0 text-indigo-600" aria-hidden="true" /><span><strong>Two layers:</strong> interface permissions shape the experience; database policies enforce access.</span></div></div>;
 }
 
-function AccessValue({ value }: { value: boolean | string }) {
-  if (value === false) return <span className="font-medium text-slate-400">Restricted</span>;
-  return <span className="flex items-center gap-1.5 font-semibold text-emerald-700"><Check size={14} aria-hidden="true" />{value === true ? "Allowed" : value}</span>;
+function PermissionValue({ value }: { value: string | boolean }) {
+  return value ? <span className="flex items-center gap-1.5 font-semibold text-slate-700"><Check size={14} className="text-emerald-600" aria-hidden="true" />{typeof value === "string" ? value : "Allowed"}</span> : <span className="text-slate-400">—</span>;
 }
 
-function AnalyticsPreview() {
-  return <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-3 shadow-2xl backdrop-blur sm:p-5"><div className="rounded-xl bg-white p-4 text-slate-950 sm:p-5"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm font-bold">Workforce analytics</p><p className="mt-1 text-xs text-slate-500">Interface preview · values populate from authenticated records</p></div><span className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-600">Live record data</span></div><div className="mt-5 grid gap-3 sm:grid-cols-2"><div className="rounded-xl border border-slate-200 p-4"><p className="text-xs font-semibold text-slate-600">Department distribution</p><div className="mt-5 flex h-36 items-center justify-center"><div className="relative h-28 w-28 rounded-full bg-[conic-gradient(#4f46e5_0_38%,#818cf8_38%_62%,#059669_62%_82%,#d97706_82%)]"><div className="absolute inset-5 flex items-center justify-center rounded-full bg-white text-center text-[10px] font-semibold text-slate-500">Current<br />records</div></div></div></div><div className="rounded-xl border border-slate-200 p-4"><p className="text-xs font-semibold text-slate-600">Employment status</p><div className="mt-6 space-y-5">{[["Active", "bg-emerald-500", "w-4/5"], ["On leave", "bg-amber-500", "w-2/5"], ["Inactive", "bg-red-500", "w-1/4"]].map(([label, color, width]) => <div key={label}><div className="mb-1.5 flex justify-between text-[10px] font-medium text-slate-500"><span>{label}</span><span>Calculated live</span></div><div className="h-2 rounded-full bg-slate-100"><div className={`h-2 rounded-full ${color} ${width}`} /></div></div>)}</div></div></div><p className="mt-3 text-center text-[11px] text-slate-400">Visual structure only; no production metrics are represented here.</p></div></div>;
+function AnalyticsCanvas() {
+  return <div className="relative p-3 sm:p-6" aria-label="Illustrative preview of the workforce analytics interface"><div className="absolute inset-0 -rotate-2 bg-indigo-200/55" aria-hidden="true" /><div className="relative border border-slate-200 bg-white p-4 shadow-[0_30px_80px_rgba(15,23,42,0.16)] sm:p-6"><div className="flex items-center justify-between border-b border-slate-200 pb-5"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-indigo-600">Reports</p><p className="mt-1 text-lg font-extrabold text-slate-950">Workforce composition</p></div><span className="rounded-full border border-slate-200 px-3 py-1 text-[10px] font-bold text-slate-500">Interface preview</span></div><div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">{["Employees", "Active", "Departments", "Positions"].map((label) => <div key={label} className="bg-slate-50 p-3"><p className="text-[10px] font-semibold text-slate-400">{label}</p><p className="mt-2 text-sm font-extrabold text-slate-800">Current records</p></div>)}</div><div className="mt-4 grid gap-4 sm:grid-cols-[1.25fr_0.75fr]"><div className="border border-slate-200 p-4"><div className="flex items-center justify-between"><p className="text-xs font-bold text-slate-800">Hiring activity</p><span className="text-[10px] text-slate-400">Joined date</span></div><div className="mt-6 flex h-36 items-end gap-3 border-b border-l border-slate-100 px-3">{[44, 68, 50, 76, 58, 88, 70].map((height, index) => <span key={index} className="flex-1 bg-indigo-500/80" style={{ height: `${height}%` }} />)}</div></div><div className="border border-slate-200 p-4"><p className="text-xs font-bold text-slate-800">Status distribution</p><div className="mt-6 flex aspect-square items-center justify-center rounded-full bg-[conic-gradient(#059669_0_64%,#d97706_64%_82%,#94a3b8_82%)] p-7"><div className="flex h-full w-full items-center justify-center rounded-full bg-white text-center text-[10px] font-bold text-slate-500">Current<br />workforce</div></div></div></div></div></div>;
 }
 
-function OperationalCard({ icon: Icon, eyebrow, title, items }: { icon: typeof Bell; eyebrow: string; title: string; items: string[] }) {
-  return <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="border-b border-slate-100 bg-slate-50/70 p-6 sm:p-7"><div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600 text-white"><Icon size={21} aria-hidden="true" /></div><p className="mt-6 text-xs font-bold uppercase tracking-[0.16em] text-indigo-600">{eyebrow}</p><h3 className="mt-2 text-xl font-bold text-slate-950">{title}</h3></div><ul className="grid gap-3 p-6 text-sm text-slate-600 sm:p-7">{items.map((item) => <li key={item} className="flex items-start gap-2.5"><Check size={16} className="mt-0.5 shrink-0 text-emerald-600" aria-hidden="true" />{item}</li>)}</ul></article>;
+function OperationalFlow() {
+  const stages = [{ icon: UserCheck, label: "Decision", detail: "Admin reviews leave", tone: "text-emerald-300" }, { icon: FileClock, label: "Audit record", detail: "Actor and time preserved", tone: "text-indigo-300" }, { icon: Bell, label: "Notification", detail: "Employee receives the result", tone: "text-amber-300" }];
+  return <ol className="grid gap-3 sm:grid-cols-3">{stages.map(({ icon: Icon, label, detail, tone }, index) => <li key={label} className="relative border border-white/10 bg-white/[0.06] p-5 backdrop-blur-sm sm:min-h-48 sm:p-6"><div className="flex items-center justify-between"><Icon size={22} className={tone} aria-hidden="true" /><span className="font-mono text-xs text-slate-500">0{index + 1}</span></div><p className="mt-10 text-base font-extrabold">{label}</p><p className="mt-2 text-xs leading-5 text-slate-400">{detail}</p>{index < stages.length - 1 && <ArrowRight className="absolute -right-5 top-1/2 z-10 hidden text-slate-600 sm:block" size={18} aria-hidden="true" />}</li>)}</ol>;
 }
 
-function ResponsivePreview() {
-  return <div className="relative min-h-[370px] sm:min-h-[440px]" aria-label="Responsive application interface preview"><div className="absolute left-0 top-0 w-[88%] overflow-hidden rounded-2xl border border-slate-300 bg-white p-2 shadow-xl sm:p-3"><div className="flex h-7 items-center gap-1 border-b border-slate-100 px-2"><span className="h-2 w-2 rounded-full bg-slate-200" /><span className="h-2 w-2 rounded-full bg-slate-200" /><span className="h-2 w-2 rounded-full bg-slate-200" /></div><div className="grid h-64 grid-cols-[3.5rem_1fr] sm:h-80 sm:grid-cols-[7rem_1fr]"><div className="bg-slate-950 p-2"><div className="h-6 w-6 rounded-lg bg-indigo-600" /><div className="mt-7 space-y-2">{Array.from({ length: 5 }, (_, index) => <div key={index} className={`h-6 rounded ${index === 0 ? "bg-indigo-600" : "bg-white/5"}`} />)}</div></div><div className="bg-slate-50 p-3 sm:p-5"><div className="h-3 w-28 rounded bg-slate-800" /><div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">{Array.from({ length: 3 }, (_, index) => <div key={index} className="h-16 rounded-lg border border-slate-200 bg-white" />)}</div><div className="mt-3 h-32 rounded-lg border border-slate-200 bg-white" /></div></div></div><div className="absolute bottom-0 right-0 w-[38%] min-w-32 overflow-hidden rounded-[1.5rem] border-[5px] border-slate-900 bg-white shadow-2xl"><div className="mx-auto mt-2 h-1.5 w-10 rounded-full bg-slate-900" /><div className="p-2.5"><div className="flex items-center justify-between"><div className="h-2.5 w-12 rounded bg-slate-800" /><div className="h-6 w-6 rounded-lg bg-indigo-50" /></div><div className="mt-4 space-y-2">{Array.from({ length: 4 }, (_, index) => <div key={index} className="rounded-lg border border-slate-200 p-2"><div className="h-2 w-14 rounded bg-slate-300" /><div className="mt-2 h-1.5 w-full rounded bg-slate-100" /><div className="mt-1 h-1.5 w-2/3 rounded bg-slate-100" /></div>)}</div></div></div></div>;
+function LandingFooter() {
+  return <footer className="border-t border-slate-800 bg-[#090f1d] text-slate-300"><div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8"><div className="grid gap-12 md:grid-cols-[1.4fr_0.8fr_0.8fr_1fr]"><div><Link href="/" className="inline-flex" aria-label="HR home"><BrandLogo variant="inverse" showDescriptor decorative markClassName="text-indigo-500" /></Link><p className="mt-5 max-w-xs text-sm leading-6 text-slate-400">A focused HR management system for connected records, controlled decisions, and visible outcomes.</p></div>{footerGroups.map((group) => <div key={group.title}><p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">{group.title}</p><ul className="mt-5 space-y-3 text-sm">{group.links.map(([label, href]) => <li key={label}><Link href={href} className="transition hover:text-white">{label}</Link></li>)}</ul></div>)}<div><p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Technology</p><ul className="mt-5 space-y-3 text-sm text-slate-300"><li>Next.js + TypeScript</li><li>Supabase Auth</li><li>PostgreSQL + RLS</li></ul></div></div><div className="mt-14 flex flex-col gap-4 border-t border-slate-800 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between"><p>© 2026 HR. Portfolio HR Management System.</p><div className="flex gap-5"><a href="https://github.com/link4azeesham06-debug/employee-management-system" target="_blank" rel="noreferrer" className="transition hover:text-white">GitHub<span className="sr-only"> (opens in a new tab)</span></a><a href="https://github.com/link4azeesham06-debug/employee-management-system#readme" target="_blank" rel="noreferrer" className="transition hover:text-white">Documentation<span className="sr-only"> (opens in a new tab)</span></a></div></div></div></footer>;
 }
 
-function DemoCredential({ role, email, password }: { role: string; email: string; password: string }) {
-  return <div className="rounded-xl border border-white/15 bg-white/10 p-3.5 backdrop-blur"><p className="text-xs font-bold text-white">{role}</p><p className="mt-1 break-all text-xs text-indigo-100">{email}</p><p className="mt-0.5 text-xs text-indigo-100">Password: {password}</p></div>;
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return <p className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">{children}</p>;
 }

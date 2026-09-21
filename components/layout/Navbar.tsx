@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Bell,
@@ -31,6 +31,42 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
   } = useNotifications();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const notificationMenuRef = useRef<HTMLDivElement>(null);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showNotifications && !showProfileMenu) return;
+
+    function handlePointerDown(event: MouseEvent) {
+      if (!(event.target instanceof Node)) return;
+
+      if (
+        showNotifications &&
+        !notificationMenuRef.current?.contains(event.target)
+      ) {
+        setShowNotifications(false);
+      }
+
+      if (showProfileMenu && !profileMenuRef.current?.contains(event.target)) {
+        setShowProfileMenu(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setShowNotifications(false);
+        setShowProfileMenu(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showNotifications, showProfileMenu]);
 
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -40,8 +76,12 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
   });
 
   async function handleLogout() {
-    await logout();
-    router.push("/login");
+    try {
+      await logout();
+      router.push("/");
+    } catch {
+      // AuthContext reports the failure and preserves the current route.
+    }
   }
 
   function handleProfile() {
@@ -91,7 +131,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
             />
           </label>
 
-          <div className="relative">
+          <div ref={notificationMenuRef} className="relative">
             <button
               type="button"
               onClick={() => {
@@ -101,6 +141,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
               className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
               aria-label={unreadCount > 0 ? `Notifications, ${unreadCount} unread` : "Notifications"}
               aria-expanded={showNotifications}
+              aria-controls="navbar-notification-panel"
             >
               <Bell size={20} />
               {unreadCount > 0 && (
@@ -111,7 +152,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
             </button>
 
             {showNotifications && (
-              <div className="fixed inset-x-4 top-[5.25rem] z-[100] sm:absolute sm:inset-x-auto sm:right-0 sm:top-14">
+              <div id="navbar-notification-panel" className="fixed inset-x-4 top-[5.25rem] z-[100] sm:absolute sm:inset-x-auto sm:right-0 sm:top-14">
                 <NotificationPanel
                   notifications={notifications}
                   unreadCount={unreadCount}
@@ -123,7 +164,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
             )}
           </div>
 
-          <div className="relative">
+          <div ref={profileMenuRef} className="relative">
             <button
               type="button"
               onClick={() => {
@@ -131,7 +172,9 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
                 setShowNotifications(false);
               }}
               className="flex h-11 min-w-0 items-center gap-2 rounded-xl border border-slate-200 bg-white p-1.5 pr-2 text-left shadow-sm transition hover:border-slate-300 hover:bg-slate-50 sm:pr-3"
+              aria-label={`${displayName} account menu`}
               aria-expanded={showProfileMenu}
+              aria-controls="navbar-profile-menu"
             >
               <UserCircle size={30} className="shrink-0 text-indigo-600" />
               <div className="hidden min-w-0 sm:block md:w-32">
@@ -151,7 +194,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
             </button>
 
             {showProfileMenu && (
-              <div className="ui-floating-surface absolute right-0 top-14 z-[100] w-52 overflow-hidden py-1.5">
+              <div id="navbar-profile-menu" className="ui-floating-surface absolute right-0 top-14 z-[100] w-52 overflow-hidden py-1.5">
                 <div className="border-b border-slate-100 px-4 py-2.5 sm:hidden">
                   <p className="truncate text-sm font-semibold text-slate-900">{displayName}</p>
                   <p className="truncate text-xs text-slate-500">{displayRole}</p>

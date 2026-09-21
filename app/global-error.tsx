@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 import "./globals.css";
-import { logAppError } from "@/lib/errors/normalizeError";
+import { reportError } from "@/lib/errors/reportError";
 
 export default function GlobalError({
   error,
@@ -13,16 +13,16 @@ export default function GlobalError({
   unstable_retry: () => void;
 }) {
   useEffect(() => {
-    logAppError("GlobalErrorBoundary", error);
+    reportError(error, { scope: "GlobalErrorBoundary", force: true });
   }, [error]);
 
   return (
     <html lang="en">
       <body className="bg-slate-50 text-slate-950">
-        <title>Application error | HR Pro</title>
+        <title>Application error | HR</title>
         <main className="flex min-h-screen items-center justify-center p-6">
           <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-            <h1 className="text-xl font-bold">HR Pro could not start</h1>
+            <h1 className="text-xl font-bold">HR could not start</h1>
             <p className="mt-2 text-sm leading-6 text-slate-500">
               An unexpected application error occurred. Try loading the workspace again.
             </p>

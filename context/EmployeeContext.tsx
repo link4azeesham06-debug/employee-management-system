@@ -12,7 +12,8 @@ import {
 import { Employee } from "@/types/employee";
 import type { EmployeeCreateInput } from "@/lib/validation/employee";
 import { AppError } from "@/lib/errors/AppError";
-import { logAppError, normalizeError } from "@/lib/errors/normalizeError";
+import { normalizeError } from "@/lib/errors/normalizeError";
+import { reportError } from "@/lib/errors/reportError";
 
 import {
   getEmployees,
@@ -93,7 +94,7 @@ export function EmployeeProvider({
     try {
       await addLog(input);
     } catch (error) {
-      logAppError("EmployeeContext.audit", error);
+      reportError(error, { scope: "EmployeeContext.audit" });
     }
   }
 
@@ -146,7 +147,7 @@ export function EmployeeProvider({
         fallbackCode: "DATABASE",
         fallbackMessage: "Unable to load employees.",
       });
-      logAppError("EmployeeContext.refreshEmployees", normalized);
+      reportError(normalized, { scope: "EmployeeContext.refreshEmployees" });
       throw normalized;
     } finally {
       setLoading(false);

@@ -6,16 +6,17 @@ import {
   BarChart3,
   Bell,
   Building2,
+  CalendarDays,
   ChevronRight,
   ClipboardList,
   LayoutDashboard,
   Settings,
-  ShieldCheck,
   UserCircle,
   Users,
   X,
 } from "lucide-react";
 
+import BrandLogo from "@/components/brand/BrandLogo";
 import { useAuth } from "@/hooks/useAuth";
 import { usePermissions } from "@/hooks/usePermissions";
 
@@ -30,7 +31,7 @@ export default function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const { user, loading } = useAuth();
-  const { canViewReports, canManageDepartments } = usePermissions();
+  const { canViewReports, canManageDepartments, canViewLeave } = usePermissions();
   const isAdmin = user?.role === "admin";
 
   if (loading || !user) return null;
@@ -38,6 +39,12 @@ export default function Sidebar({
   const menuItems = [
     { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard, visible: true },
     { title: "Employees", href: "/employees", icon: Users, visible: true },
+    {
+      title: "Leave Management",
+      href: "/leave",
+      icon: CalendarDays,
+      visible: canViewLeave,
+    },
     {
       title: "Departments",
       href: "/departments",
@@ -90,14 +97,13 @@ export default function Sidebar({
       >
         <div className="flex min-h-0 flex-1 flex-col">
           <div className="flex h-20 shrink-0 items-center gap-3 border-b border-white/10 px-5">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 shadow-sm shadow-indigo-950/30">
-              <ShieldCheck size={22} aria-hidden="true" />
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <p className="text-lg font-bold tracking-tight">HR Pro</p>
-              <p className="truncate text-xs text-slate-400">Management System</p>
-            </div>
+            <BrandLogo
+              variant="inverse"
+              showDescriptor
+              markSize={40}
+              className="min-w-0 flex-1"
+              markClassName="text-indigo-500 shadow-sm shadow-indigo-950/30"
+            />
 
             <button
               type="button"

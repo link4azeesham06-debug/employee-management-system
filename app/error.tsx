@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 
-import { logAppError } from "@/lib/errors/normalizeError";
+import { reportError } from "@/lib/errors/reportError";
 
 export default function ErrorPage({
   error,
@@ -13,7 +13,7 @@ export default function ErrorPage({
   unstable_retry: () => void;
 }) {
   useEffect(() => {
-    logAppError("AppErrorBoundary", error);
+    reportError(error, { scope: "AppErrorBoundary", force: true });
   }, [error]);
 
   return (
